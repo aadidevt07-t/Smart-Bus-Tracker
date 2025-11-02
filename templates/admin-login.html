@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login | Smart Bus Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Raleway:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: radial-gradient(circle at top left, #3b82f6, #1e293b 80%);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: rgba(0, 0, 0, 0.4);
+      color: #fff;
+      padding: 18px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 100;
+    }
+    header h1 {
+      font-family: 'Raleway', sans-serif;
+      font-size: 28px;
+      letter-spacing: 1px;
+    }
+    nav a {
+      color: #fff;
+      margin-left: 22px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    nav a:hover {
+      color: #93c5fd;
+    }
+
+    .container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding-top: 60px;
+    }
+
+    .login-card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 60px 70px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+      width: 380px;
+      text-align: center;
+      color: #f8fafc;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-card h2 {
+      font-family: 'Raleway', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 30px;
+      color: #ffffff;
+      letter-spacing: 0.5px;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 30px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 14px 12px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid rgba(255,255,255,0.4);
+      color: #fff;
+      font-size: 15px;
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    .input-group label {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 15px;
+      pointer-events: none;
+      transition: 0.3s;
+    }
+
+    .input-group input:focus ~ label,
+    .input-group input:valid ~ label {
+      top: -10px;
+      font-size: 13px;
+      color: #60a5fa;
+    }
+
+    .input-group input:focus {
+      border-color: #60a5fa;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #3b82f6, #1e40af);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(59,130,246,0.4);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      box-shadow: 0 6px 20px rgba(37,99,235,0.6);
+    }
+
+    /* Error message style */
+    .error-message {
+      margin-top: 15px;
+      background: rgba(255, 0, 0, 0.1);
+      color: #ff6b6b;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 500;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    footer {
+      text-align: center;
+      color: rgba(255,255,255,0.7);
+      padding: 15px;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+    }
+
+    @media (max-width: 480px) {
+      .login-card {
+        width: 85%;
+        padding: 40px 25px;
+      }
+      header {
+        padding: 15px 25px;
+      }
+      header h1 {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Smart Bus Tracker</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/search">Bus List</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="login-card">
+      <h2>Admin Login</h2>
+      <form method="post">
+        <div class="input-group">
+          <input type="text" name="username" id="username" required />
+          <label for="username">Username</label>
+        </div>
+        <div class="input-group">
+          <input type="password" name="password" id="password" required />
+          <label for="password">Password</label>
+        </div>
+        <button type="submit">Sign In</button>
+
+        {% if error %}
+          <div class="error-message">{{ error }}</div>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    © 2025 Smart Bus Tracker | Developed by Team SmartTrack
+  </footer>
+</body>
+</html>

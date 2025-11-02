@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{{ bus.name }} - Smart Bus Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: #f3f6fa; color: #1a1a1a; }
+
+    /* Header */
+    header { background: rgba(31, 41, 55, 0.9); color: #fff; padding: 15px 50px; display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; }
+    header h1 { font-family: 'Raleway', sans-serif; font-size: 26px; }
+    nav a { color: #fff; margin-left: 20px; text-decoration: none; font-weight: 500; transition: color 0.3s; }
+    nav a:hover { color: #60a5fa; }
+
+    .section { padding: 80px 20px 40px; max-width: 1000px; margin: auto; }
+    .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06); margin-bottom: 25px; }
+    .card h3 { font-size: 22px; margin-bottom: 10px; color: #1f2937; }
+    .card p, .card li { font-size: 16px; color: #4b5563; line-height: 1.6; }
+    #map { width: 100%; height: 400px; border-radius: 12px; margin-top: 20px; }
+
+    .btn { display: inline-block; margin-top: 20px; padding: 10px 20px; background: #3b82f6; color: #fff; border-radius: 6px; text-decoration: none; transition: background 0.3s; }
+    .btn:hover { background: #2563eb; }
+
+    /* About & Contact */
+    #about, #contact { max-width: 600px; margin: 40px auto; padding: 20px; background: #f3f4f6; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: left; }
+    #about h3, #contact h3 { font-family: 'Raleway', sans-serif; font-weight: 700; margin-bottom: 20px; color: #2563eb; }
+    #about p, #contact p { font-size: 16px; line-height: 1.5; color: #374151; }
+    #contact a { color: #2563eb; text-decoration: none; }
+    #contact a:hover { text-decoration: underline; }
+
+    /* Contact Ribbon */
+    .contact-ribbon { position: fixed; top: 200px; right: -120px; background: #2563eb; color: white; padding: 12px 40px; transform: rotate(-90deg); font-weight: bold; cursor: pointer; transition: right 0.3s; z-index: 999; border-radius: 8px 8px 0 0; }
+    .contact-panel { position: fixed; top: 200px; right: 20px; background: white; color: #1a1a1a; padding: 20px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); display: none; z-index: 998; }
+
+    footer { background: #1f2937; color: #fff; text-align: center; padding: 20px; font-size: 14px; margin-top: 30px; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <h1>Smart Bus Tracker</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/search">Bus List</a>
+      <a href="#about">About Us</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <!-- Live Tracking Section -->
+  <section class="section">
+    <div class="card">
+      <h3>📍 Live Bus Location</h3>
+      <p>Tracking current location of <b>{{ bus.name }}</b> on route <b>{{ bus.route }}</b>.</p>
+      <div id="map"></div>
+    </div>
+  </section>
+
+  <!-- Bus Info Section -->
+  <section class="section">
+    <div class="card">
+      <h3>🚌 Bus Details</h3>
+      <p><b>Bus Number:</b> {{ bus.number }}</p>
+      <p><b>Route:</b> {{ bus.route }}</p>
+      <p><b>Arrival Time:</b> {{ bus.arrival }}</p>
+      <p><b>Status:</b> {{ bus.status }}</p>
+    </div>
+    <div class="card">
+      <h3>💺 Seating Info</h3>
+      <p><b>Total Seats:</b> {{ bus.total_seats }}</p>
+      <p><b>Seats Available:</b> {{ bus.available_seats }}</p>
+      <p><b>Current Passengers:</b> {{ bus.passengers }}</p>
+    </div>
+    <a href="javascript:history.back()" class="btn">🔙 Back to Bus List</a>
+  </section>
+
+  <!-- About Us Section -->
+  <section id="about">
+    <h3>ℹ️ About Us</h3>
+    <p>We are Team SmartTrack, providing real-time bus tracking for safer and smarter commuting.</p>
+  </section>
+
+  <!-- Contact Ribbon and Panel -->
+  <div class="contact-ribbon" onclick="toggleContactPanel()">Contact</div>
+  <div class="contact-panel" id="contactPanel">
+    <p><strong>Email:</strong> support@smarttrack.com</p>
+    <p><strong>Phone:</strong> +1 234 567 8901</p>
+  </div>
+
+  <!-- Contact Section -->
+  <section id="contact">
+    <h3>📩 Contact Us</h3>
+    <p>Email 1: <a href="mailto:aadidevt70@gmail.com">aadidevt70@gmail.com</a></p>
+    <p>Email 2: <a href="mailto:abhayrajeesh2008@gmail.com">abhayrajeesh2008@gmail.com</a></p>
+    <p>Phone no: <strong>6238346233</strong></p>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>Developed by Team SmartTrack © 2025</p>
+  </footer>
+
+  <!-- Leaflet & JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    function toggleContactPanel() {
+      const panel = document.getElementById('contactPanel');
+      panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Initial coordinates
+    var lat = parseFloat("{{ bus.lat|default(0) }}");
+    var lng = parseFloat("{{ bus.lng|default(0) }}");
+
+    var map = L.map('map').setView([lat, lng], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    var busIcon = L.icon({
+      iconUrl: 'https://cdn-icons-png.flaticon.com/512/61/61231.png',
+      iconSize: [38, 38],
+    });
+
+    var marker = L.marker([lat, lng], { icon: busIcon }).addTo(map)
+      .bindPopup("<b>{{ bus.name }}</b><br>{{ bus.route }}")
+      .openPopup();
+
+    // Smooth marker movement
+    function moveMarker(marker, newLat, newLng) {
+      var currentPos = marker.getLatLng();
+      var steps = 10;
+      var i = 0;
+      var latStep = (newLat - currentPos.lat) / steps;
+      var lngStep = (newLng - currentPos.lng) / steps;
+
+      function step() {
+        if (i < steps) {
+          marker.setLatLng([currentPos.lat + latStep * i, currentPos.lng + lngStep * i]);
+          i++;
+          requestAnimationFrame(step);
+        }
+      }
+      step();
+    }
+
+    // Fetch latest bus coordinates
+    function updateBus() {
+      fetch("/bus-data/{{ bus.id }}?t=" + new Date().getTime())
+        .then(response => response.json())
+        .then(data => {
+          if (data.lat && data.lng) {
+            var newLat = parseFloat(data.lat);
+            var newLng = parseFloat(data.lng);
+            moveMarker(marker, newLat, newLng);
+            map.panTo([newLat, newLng]);
+          }
+        })
+        .catch(err => console.error(err));
+    }
+
+    setInterval(updateBus, 3000);
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Available Buses - Smart Bus Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+        color: white;
+    }
+    header {
+        background: rgba(0,0,0,0.8);
+        padding: 20px;
+        text-align: center;
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #00ffae;
+        letter-spacing: 2px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+    .container {
+        margin: 30px auto;
+        max-width: 900px;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.4);
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+        margin-top: 20px;
+    }
+    th, td {
+        padding: 12px;
+        border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+    th {
+        background: rgba(0, 255, 174, 0.3);
+        font-weight: 600;
+    }
+    tr:hover {
+        background: rgba(255, 255, 255, 0.1);
+        cursor: pointer;
+    }
+    .btn {
+        background: #00ffae;
+        color: black;
+        padding: 8px 12px;
+        border: none;
+        border-radius: 5px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .btn:hover {
+        background: #00cc8c;
+    }
+</style>
+</head>
+<body>
+<header>🚍 Available Buses</header>
+<div class="container">
+    <p>Here are the buses available for your search from <b>{{ from_place }}</b> to <b>{{ to_place }}</b>:</p>
+    <table>
+        <tr>
+            <th>Bus Name</th>
+            <th>Route</th>
+            <th>Arrival Time</th>
+            <th>Action</th>
+        </tr>
+        {% for bus in buses %}
+        <tr>
+            <td>{{ bus.name }}</td>
+            <td>{{ bus.route }}</td>
+            <td>{{ bus.arrival }}</td>
+            <td><a href="{{ url_for('bus_info', bus_id=bus.id) }}" class="btn">Track</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+</body>
+</html>

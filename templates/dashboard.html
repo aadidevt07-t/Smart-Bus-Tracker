@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | Smart Bus Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Raleway:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: radial-gradient(circle at top left, #3b82f6, #1e293b 80%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      color: #f8fafc;
+    }
+    header {
+      background: rgba(0, 0, 0, 0.4);
+      color: #fff;
+      padding: 18px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      z-index: 10;
+    }
+    header h1 {
+      font-family: 'Raleway', sans-serif;
+      font-size: 28px;
+      letter-spacing: 1px;
+    }
+    nav a {
+      color: #fff;
+      margin-left: 20px;
+      text-decoration: none;
+      transition: 0.3s;
+      font-weight: 500;
+    }
+    nav a:hover { color: #93c5fd; }
+
+    .container {
+      margin-top: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 40px 60px;
+      width: 90%;
+      max-width: 900px;
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+      animation: fadeIn 1s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card h2 {
+      font-family: 'Raleway', sans-serif;
+      font-size: 26px;
+      margin-bottom: 25px;
+      color: #fff;
+    }
+
+    .btn {
+      display: inline-block;
+      margin: 10px 8px;
+      padding: 12px 22px;
+      background: linear-gradient(135deg, #3b82f6, #1e40af);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 10px;
+      font-weight: 600;
+      transition: all 0.3s;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(59,130,246,0.4);
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      box-shadow: 0 6px 20px rgba(37,99,235,0.6);
+    }
+
+    .delete-btn {
+      background: linear-gradient(135deg, #dc2626, #991b1b);
+      box-shadow: 0 4px 15px rgba(239,68,68,0.4);
+    }
+    .delete-btn:hover {
+      background: linear-gradient(135deg, #ef4444, #b91c1c);
+      box-shadow: 0 6px 20px rgba(239,68,68,0.6);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 25px;
+      text-align: left;
+    }
+    th, td {
+      padding: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+    th {
+      background-color: rgba(255,255,255,0.15);
+      font-weight: 600;
+    }
+    td { color: rgba(255,255,255,0.9); }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      margin-top: auto;
+    }
+
+    @media (max-width: 768px) {
+      header { padding: 18px 25px; }
+      .card { padding: 30px 20px; }
+      table, th, td { font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Smart Bus Tracker</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/add-bus">Add Bus</a>
+      <a href="/logout">Logout</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <!-- ✅ Flash messages section -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div id="flash-messages" style="margin-bottom:20px; text-align:center;">
+            {% for category, message in messages %}
+              <div style="
+                background: rgba(255,255,255,0.15);
+                padding: 10px 15px;
+                margin-bottom: 10px;
+                border-radius: 10px;
+                color: #fff;
+                font-weight: 500;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+              ">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+      <!-- ✅ End of flash messages -->
+
+      <h2>Welcome, Admin</h2>
+      <a href="/add-bus" class="btn">➕ Add New Bus</a>
+
+      {% if buses %}
+      <table>
+        <tr>
+          <th>ID</th>
+          <th>Bus No</th>
+          <th>Name</th>
+          <th>Route</th>
+          <th>Total Seats</th>
+          <th>Actions</th>
+        </tr>
+        {% for bus in buses %}
+        <tr>
+          <td>{{ bus.id }}</td>
+          <td>{{ bus.number }}</td>
+          <td>{{ bus.name }}</td>
+          <td>{{ bus.route }}</td>
+          <td>{{ bus.total_seats }}</td>
+          <td>
+            <form action="/delete-bus/{{ bus.id }}" method="POST" style="display:inline;">
+              <button class="btn delete-btn" onclick="return confirm('Are you sure you want to delete this bus?')">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% else %}
+      <p style="margin-top:20px; color: #cbd5e1;">No buses found in the database.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <footer>© 2025 Smart Bus Tracker | Admin Panel</footer>
+
+  <!-- Optional: make notifications fade after few seconds -->
+  <script>
+    setTimeout(() => {
+      const flash = document.getElementById("flash-messages");
+      if (flash) flash.style.display = "none";
+    }, 3500);
+  </script>
+</body>
+</html>

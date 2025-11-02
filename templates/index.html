@@ -1,0 +1,252 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+  <meta charset="UTF-8" /> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
+  <title>Smart Bus Tracker - Home</title> 
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600&family=Raleway:wght@400;700&display=swap" rel="stylesheet"> 
+  <style> 
+    * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; } 
+    body { font-family: 'Inter', sans-serif; background: #f9fafb; color: #1a1a1a; } 
+    /* Header */ 
+    header { background: rgba(31, 41, 55, 0.9); color: #fff; padding: 15px 50px; display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; } 
+    header h1 { font-family: 'Raleway', sans-serif; font-size: 26px; } 
+    nav a { color: #fff; margin-left: 20px; text-decoration: none; font-weight: 500; transition: color 0.3s; } 
+    nav a:hover { color: #60a5fa; } 
+    /* Hero Section */ 
+    .hero { height: 100vh; background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1558981033-00b4f90fd1cf?auto=format&fit=crop&w=1740&q=80') center/cover; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px; color: white; } 
+    .hero h2 { font-size: 48px; font-family: 'Raleway', sans-serif; margin-bottom: 15px; max-width: 700px; } 
+    .hero p { font-size: 18px; max-width: 650px; margin-bottom: 30px; } 
+    /* Modernized Search Form */ 
+    .search-box { background: #ffffff; padding: 18px 24px; border-radius: 16px; box-shadow: 0 8px 20px rgba(59, 130, 246, 0.15); display: flex; gap: 15px; max-width: 700px; width: 100%; align-items: center; } 
+    .search-box input { flex: 1; padding: 16px 18px; border: 1.5px solid #d1d5db; border-radius: 12px; font-size: 16px; font-weight: 500; color: #1a1a1a; transition: border-color 0.3s, box-shadow 0.3s; outline-offset: 2px; } 
+    .search-box input::placeholder { color: #9ca3af; font-weight: 400; } 
+    .search-box input:focus { border-color: #3b82f6; box-shadow: 0 0 8px rgba(59, 130, 246, 0.5); outline: none; } 
+    .search-box button { background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 16px 30px; border: none; border-radius: 12px; font-size: 18px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.6); transition: background 0.3s, box-shadow 0.3s; } 
+    .search-box button:hover { background: linear-gradient(90deg, #2563eb 0%, #1e40af 100%); box-shadow: 0 6px 20px rgba(30, 64, 175, 0.75); } 
+    /* Suggestions dropdown styling - minimal and non-intrusive */
+    .suggestions-box {
+      position: absolute;
+      background: white;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      max-height: 140px;
+      overflow-y: auto;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      z-index: 1000;
+      width: 100%;
+      display: none;
+    }
+    .suggestions-box div {
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #1a1a1a;
+    }
+    .suggestions-box div:hover {
+      background-color: #ebf2ff;
+    }
+    /* Wrap inputs in relative containers to position suggestions */
+    .input-wrapper {
+      position: relative;
+      flex: 1;
+    }
+    /* Features Section */ 
+    .features { max-width: 1100px; margin: 80px auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; } 
+    .feature-card { background: white; padding: 30px; border-radius: 12px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.06); transition: transform 0.3s; } 
+    .feature-card:hover { transform: translateY(-5px); } 
+    .feature-card h3 { font-size: 22px; margin-bottom: 10px; } 
+    .feature-card p { color: #6b7280; font-size: 15px; } 
+    /* Footer */ 
+    footer { background: #1f2937; color: #fff; text-align: center; padding: 25px 20px; font-size: 14px; margin-top: 50px; } 
+    /* Contact Ribbon */ 
+    .contact-ribbon { position: fixed; top: 200px; right: -120px; background: #2563eb; color: white; padding: 12px 40px; transform: rotate(-90deg); font-weight: bold; cursor: pointer; transition: right 0.3s; z-index: 999; border-radius: 8px 8px 0 0; } 
+    .contact-panel { position: fixed; top: 200px; right: 20px; background: white; color: #1a1a1a; padding: 20px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); display: none; z-index: 998; } 
+    /* About Us Section */ 
+    #about { max-width: 600px; margin: 40px auto 80px; padding: 20px; background: #f3f4f6; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); font-family: 'Inter', sans-serif; text-align: left; } 
+    #about h3 { font-family: 'Raleway', sans-serif; font-weight: 700; margin-bottom: 20px; color: #2563eb; } 
+    #about p { font-size: 16px; line-height: 1.5; color: #374151; } 
+    /* Contact Section */ 
+    #contact { max-width: 600px; margin: 40px auto; padding: 20px; background: #f3f4f6; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); font-family: 'Inter', sans-serif; text-align: left; } 
+    #contact h3 { font-family: 'Raleway', sans-serif; font-weight: 700; margin-bottom: 20px; color: #2563eb; } 
+    #contact p { font-size: 16px; margin-bottom: 12px; } 
+    #contact a { color: #2563eb; text-decoration: none; } 
+    #contact a:hover { text-decoration: underline; } 
+    @media (max-width: 768px) { 
+      .hero h2 { font-size: 34px; } 
+    }
+  </style> 
+</head> 
+<body> 
+  <!-- Header --> 
+  <header> 
+    <h1>Smart Bus Tracker</h1> 
+    <nav> 
+      <a href="index.html">Home</a> 
+      <a href="tracker.html">Live Tracking</a> 
+      <a href="#about">About Us</a> 
+      <a href="#contact">Contact</a> 
+    </nav> 
+  </header> 
+
+  <!-- Hero Section --> 
+  <section class="hero"> 
+    <h2>Plan Your Bus Trip with Confidence</h2> 
+    <p>Real-time bus locations, seat availability, and smart route suggestions to make your journey stress-free.</p> 
+    
+    <!-- Form with minimal added wrappers for suggestions -->
+    <form action="/search" method="GET" class="search-box"> 
+     <div class="input-wrapper">
+        <input id="start-location" type="text" name="from_place" placeholder="Starting Location" autocomplete="off" required />
+        <div id="suggestions-start" class="suggestions-box"></div>
+     </div>
+     <div class="input-wrapper">
+        <input id="end-location" type="text" name="to_place" placeholder="Destination" autocomplete="off" required />
+        <div id="suggestions-end" class="suggestions-box"></div>
+     </div>
+        <button type="submit">Search</button> 
+    </form>
+
+  </section> 
+
+  <!-- Features --> 
+  <section class="features" id="about"> 
+    <div class="feature-card"> 
+      <h3>🕒 Real-Time Tracking</h3> 
+      <p>Track bus locations live and get accurate arrival times.</p> 
+    </div> 
+    <div class="feature-card"> 
+      <h3>📊 Seat Availability</h3> 
+      <p>Check how many seats are free before you board.</p> 
+    </div> 
+    <div class="feature-card"> 
+      <h3>🚏 Smart Routes</h3> 
+      <p>Get the fastest and most convenient routes for your trip.</p> 
+    </div> 
+  </section> 
+
+  <!-- About Us Section --> 
+  <section id="about"> 
+    <h3>ℹ️ About Us</h3> 
+    <p>We are Team SmartTrack, a group of innovators dedicated to making public transport smarter and more reliable. Our mission is to provide real-time bus tracking and passenger monitoring to ensure a smoother, safer, and more convenient commuting experience.</p> 
+  </section> 
+
+  <!-- Contact Ribbon and Panel --> 
+  <div class="contact-ribbon" onclick="toggleContactPanel()">Contact</div> 
+  <div class="contact-panel" id="contactPanel"> 
+    <p><strong>Email:</strong> support@smarttrack.com</p> 
+    <p><strong>Phone:</strong> +1 234 567 8901</p> 
+  </div> 
+
+  <!-- Contact Section --> 
+  <section id="contact"> 
+    <h3>📩 Contact Us</h3> 
+    <p>Email 1: <a href="mailto:aadidevt70@gmail.com">aadidevt70@gmail.com</a></p> 
+    <p>Email 2: <a href="mailto:abhayrajeesh2008@gmail.com">abhayrajeesh2008@gmail.com</a></p> 
+    <p>Phone no: <strong>6238346233</strong></p> 
+  </section> 
+
+  <!-- Footer --> 
+  <footer> 
+    <p>Developed by Team SmartTrack © 2025</p> 
+  </footer> 
+
+  <!-- JavaScript --> 
+  <script> 
+    function toggleContactPanel() { 
+      const panel = document.getElementById('contactPanel'); 
+      panel.style.display = panel.style.display === 'block' ? 'none' : 'block'; 
+    } 
+
+    // Simple locations list for demo suggestions
+   const locations = [
+  // Original 13 cities
+  "Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad",
+  "Pune", "Ahmedabad", "Jaipur", "Lucknow", "Surat", "Nagpur", "Indore",
+
+  // 100 South Indian places (expanded)
+  "Coimbatore", "Mysore", "Madurai", "Tiruchirappalli", "Salem", "Tirunelveli",
+  "Tiruppur", "Vellore", "Erode", "Thoothukudi", "Karur", "Dindigul", "Nagercoil",
+  "Palani", "Krishnagiri", "Namakkal", "Dharmapuri", "Cuddalore", "Villupuram",
+  "Tiruvannamalai", "Kanchipuram", "Chengalpattu", "Mangalore", "Udupi", "Manipal",
+  "Shimoga", "Hassan", "Chikmagalur", "Bellary", "Hospet", "Gulbarga", "Bidar",
+  "Raichur", "Bijapur", "Kurnool", "Anantapur", "Kadapa", "Tirupati", "Chittoor",
+  "Vijayawada", "Guntur", "Nellore", "Kakinada", "Rajahmundry", "Visakhapatnam",
+  "Vijayanagaram", "Srikakulam", "Thiruvananthapuram", "Kollam", "Alappuzha",
+  "Kottayam", "Idukki", "Pathanamthitta", "Ernakulam", "Thrissur", "Palakkad",
+  "Malappuram", "Kozhikode", "Wayanad", "Kannur", "Kasargod", "Ooty", "Kodaikanal",
+  "Yercaud", "Coorg", "Chikballapur", "Bhimavaram", "Nizamabad", "Karimnagar",
+  "Adilabad", "Warangal", "Khammam", "Nalgonda", "Mahbubnagar", "Suryapet",
+  "Jagitial", "Mancherial", "Peddapalli", "Kamareddy", "Jagtial", "Komaram Bheem",
+  "Bhadradri Kothagudem", "Mulugu", "Nagarkurnool", "Wanaparthy", "Narayanpet",
+  "Vikarabad", "Ranga Reddy", "Medchal", "Siddipet", "Hanamkonda", "Warangal Rural",
+  "Jayashankar Bhupalpally", "Nirmal",
+
+  // 200 Kerala places (partial, representative list)
+  "Kochi", "Varkala", "Munnar", "Vagamon", "Kumarakom", "Athirappilly", "Cherthala",
+  "Kanhangad", "Payyannur", "Taliparamba", "Ponnani", "Perinthalmanna", "Manjeri",
+  "Nilambur", "Edappal", "Changanassery", "Erattupetta", "Pala", "Vaikom", "Kanjirappally",
+  "Kuttanad", "Kayamkulam", "Aluva", "Angamaly", "Kothamangalam", "Muvattupuzha",
+  "Koothattukulam", "Irinjalakuda", "Kunnamkulam", "Guruvayur", "Kodungallur",
+  "Chavakkad", "Vatakara", "Thalassery", "Nileshwaram", "Beypore", "Feroke",
+  "Kadalundi", "Tirurangadi", "Kondotty", "Oorakam", "Pallikkal", "Melattur",
+  "Pulpatta", "Angadipuram", "Eranad", "Wandoor", "Kizhisseri", "Kunnamangalam",
+  "Mullurkara", "Vazhani", "Wadakkanchery", "Chelakkara", "Koratty", "Thalapilly",
+  "Vadakkekad", "Tanalur", "Pattambi", "Attappady", "Mannarkkad", "Alathur",
+  "Chittur", "Ottapalam", "Shoranur", "Nenmara", "Kollengode", "Vadakkencherry",
+  "Iringa", "Edavanna", "Areekode", "Malappuram", "Valanchery", "Mankada",
+
+  // 50 places from Palakkad, Thrissur, Malappuram districts (additional specific ones)
+  "Puthukkad", "Chalakudy", "Wadakkanchery", "Chelakkara", "Koratty", "Thalapilly",
+  "Vadakkekad", "Tirurangadi", "Kondotty", "Oorakam", "Pallikkal", "Melattur",
+  "Pulpatta", "Angadipuram", "Eranad", "Wandoor", "Valanchery", "Kizhisseri",
+  "Kunnamangalam", "Mankada", "Tanalur","Lovely corner","Zimbabwe"
+];
+
+
+
+    function setupAutocomplete(inputId, suggestionsId) {
+      const input = document.getElementById(inputId);
+      const suggestionsBox = document.getElementById(suggestionsId);
+
+      input.addEventListener('input', () => {
+        const value = input.value.trim().toLowerCase();
+        suggestionsBox.innerHTML = '';
+
+        if (!value) {
+          suggestionsBox.style.display = 'none';
+          return;
+        }
+
+        const filtered = locations.filter(loc => loc.toLowerCase().startsWith(value));
+
+        if (filtered.length === 0) {
+          suggestionsBox.style.display = 'none';
+          return;
+        }
+
+        filtered.forEach(loc => {
+          const div = document.createElement('div');
+          div.textContent = loc;
+          div.addEventListener('click', () => {
+            input.value = loc;
+            suggestionsBox.style.display = 'none';
+          });
+          suggestionsBox.appendChild(div);
+        });
+
+        suggestionsBox.style.display = 'block';
+      });
+
+      input.addEventListener('blur', () => {
+        setTimeout(() => {
+          suggestionsBox.style.display = 'none';
+        }, 150);
+      });
+    }
+
+    setupAutocomplete('start-location', 'suggestions-start');
+    setupAutocomplete('end-location', 'suggestions-end');
+  </script> 
+</body> 
+</html>

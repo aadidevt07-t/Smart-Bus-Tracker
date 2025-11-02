@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Bus | Smart Bus Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Raleway:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: radial-gradient(circle at top left, #3b82f6, #1e293b 80%);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: rgba(0, 0, 0, 0.4);
+      color: #fff;
+      padding: 18px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 100;
+    }
+    header h1 {
+      font-family: 'Raleway', sans-serif;
+      font-size: 28px;
+      letter-spacing: 1px;
+    }
+    nav a {
+      color: #fff;
+      margin-left: 22px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    nav a:hover { color: #93c5fd; }
+
+    .container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding-top: 60px;
+    }
+
+    .form-card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 40px 50px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+      width: 420px;
+      text-align: center;
+      color: #f8fafc;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .form-card h2 {
+      font-family: 'Raleway', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 22px;
+      color: #ffffff;
+      letter-spacing: 0.4px;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 22px;
+      text-align: left;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 14px 12px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid rgba(255,255,255,0.14);
+      color: #fff;
+      font-size: 15px;
+      outline: none;
+      transition: all 0.25s;
+    }
+
+    .input-group label {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 15px;
+      pointer-events: none;
+      transition: 0.25s;
+    }
+
+    .input-group input:focus ~ label,
+    .input-group input:not(:placeholder-shown) ~ label {
+      top: -10px;
+      font-size: 13px;
+      color: #60a5fa;
+    }
+
+    input:focus { border-color: #60a5fa; }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #3b82f6, #1e40af);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 15px rgba(59,130,246,0.35);
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      box-shadow: 0 6px 20px rgba(37,99,235,0.45);
+    }
+
+    .note {
+      margin-top: 12px;
+      color: rgba(255,255,255,0.75);
+      font-size: 13px;
+    }
+
+    .message {
+      margin-bottom: 14px;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+    .message.success { background: rgba(0,255,123,0.08); color: #8ef7b7; }
+    .message.error   { background: rgba(255,0,0,0.08); color: #ffb3b3; }
+
+    footer {
+      text-align: center;
+      color: rgba(255,255,255,0.7);
+      padding: 12px;
+      font-size: 13px;
+    }
+
+    @media (max-width: 480px) {
+      .form-card { width: 92%; padding: 30px; }
+      header { padding: 12px 18px; }
+      header h1 { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Smart Bus Tracker</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/search">Bus List</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="form-card">
+      <h2>➕ Add New Bus</h2>
+
+      {% if error %}
+        <div class="message error">{{ error }}</div>
+      {% endif %}
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, msg in messages %}
+            <div class="message {{ 'success' if category=='success' else 'error' }}">{{ msg }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <form action="/add-bus" method="POST" autocomplete="off">
+        <div class="input-group">
+          <input type="text" id="name" name="name" placeholder=" " required>
+          <label for="name">Bus Name</label>
+        </div>
+
+        <div class="input-group">
+          <input type="text" id="route" name="route" placeholder=" " required>
+          <label for="route">Route (e.g. City A → City B)</label>
+        </div>
+
+        <div class="input-group">
+          <input type="text" id="number" name="number" placeholder=" " required>
+          <label for="number">Bus Number (e.g. KL-01-1234)</label>
+        </div>
+
+        <div class="input-group">
+          <input type="number" id="total_seats" name="total_seats" placeholder=" " min="1" required>
+          <label for="total_seats">Total Seats</label>
+        </div>
+
+        <button class="btn" type="submit">Add Bus</button>
+        <div class="note"><a href="/dashboard" style="color:#cfe9ff; text-decoration:none;">← Back to Dashboard</a></div>
+      </form>
+    </div>
+  </div>
+
+  <footer>© 2025 Smart Bus Tracker | Developed by Team SmartTrack</footer>
+</body>
+</html>
