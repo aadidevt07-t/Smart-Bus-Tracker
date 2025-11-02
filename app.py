@@ -40,21 +40,36 @@ def search():
 @app.route("/bus/<int:bus_id>")
 def bus_info(bus_id):
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cur = conn.cursor()
 
-    cursor.execute("""
-        SELECT *, (total_seats - passengers) AS available_seats
-        FROM buses WHERE id=%s
+    cur.execute("""
+        SELECT id, name, route, arrival, number, status, total_seats, available_seats, passengers, lat, lng 
+        FROM buses 
+        WHERE id = %s
     """, (bus_id,))
 
-    bus = cursor.fetchone()
-    cursor.close()
+    row = cur.fetchone()
+    cur.close()
     conn.close()
 
-    if not bus:
+    if row is None:
         return "Bus not found", 404
 
-    return render_template("bus-info.html", bus=bus)
+    bus = {
+        "id": row[0],
+        "name": row[1],
+        "route": row[2],
+        "arrival": row[3],
+        "number": row[4],
+        "status": row[5],
+        "total_seats": row[6],
+        "available_seats": row[7],
+        "passengers": row[8],
+        "lat": row[9],
+        "lng": row[10]
+    }
+
+    return render_template("businfo.html", bus=bus)
 
 
 
@@ -70,7 +85,7 @@ def bus_data(bus_id):
     if not bus:
         return jsonify({"error": "Bus not found"}), 404
 
-    return jsonify(bus)
+    return jsonify({"lat": bus[0], "lng": bus[1]})
 
 
 # ---------------- Admin Panel ----------------
