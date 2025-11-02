@@ -79,10 +79,10 @@
         </tr>
         {% for bus in buses %}
         <tr>
-            <td>{{ bus.name }}</td>
-            <td>{{ bus.route }}</td>
-            <td>{{ bus.arrival }}</td>
-            <td><a href="{{ url_for('bus_info', bus_id=bus.id) }}" class="btn">Track</a></td>
+            <td>{{ bus[1] }}</td>
+            <td>{{ bus[2] }} → {{ bus[3] }}</td>
+            <td>{{ bus[4] }}</td>
+            <td><a href="{{ url_for('bus_info', bus_id=bus[0]) }}" class="btn">Track</a></td>
         </tr>
         {% endfor %}
     </table>
