@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash
+import psycopg2
 import mysql.connector
+import os
 import random
 import datetime
 
@@ -7,16 +9,11 @@ app = Flask(__name__)
 app.secret_key = "smartbus_secret_key"  # Needed for session handling
 
 # --- MySQL configuration ---
-DB_CONFIG = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': 'smvsch',
-    'database': 'smartbus'
-}
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 
 def get_db_connection():
-    return mysql.connector.connect(**DB_CONFIG)
+    return psycopg2.connect(DATABASE_URL, sslmode="require")
 
 
 # ---------------- Public Pages ----------------
@@ -31,7 +28,7 @@ def search():
     to_place = request.args.get("to_place")
 
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
     cursor.execute("SELECT * FROM buses")
     buses = cursor.fetchall()
     cursor.close()
@@ -43,7 +40,7 @@ def search():
 @app.route("/bus/<int:bus_id>")
 def bus_info(bus_id):
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
     cursor.execute("""
         SELECT *, (total_seats - passengers) AS available_seats
@@ -64,7 +61,7 @@ def bus_info(bus_id):
 @app.route("/bus-data/<int:bus_id>")
 def bus_data(bus_id):
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
     cursor.execute("SELECT lat, lng FROM buses WHERE id=%s", (bus_id,))
     bus = cursor.fetchone()
     cursor.close()
@@ -85,7 +82,7 @@ def admin_login():
         password = request.form.get("password")
 
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
         cursor.execute("SELECT * FROM admin WHERE username=%s AND password=%s", (username, password))
         admin = cursor.fetchone()
         cursor.close()
@@ -106,7 +103,7 @@ def dashboard():
         return redirect(url_for("admin_login"))
 
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
     cursor.execute("SELECT * FROM buses")
     buses = cursor.fetchall()
     cursor.close()
