@@ -140,38 +140,39 @@
   <header>
     <h1>Smart Bus Tracker</h1>
     <nav>
-      <a href="/">Home</a>
-      <a href="/add-bus">Add Bus</a>
-      <a href="/logout">Logout</a>
+      <a href="/admin">Logout</a>
     </nav>
   </header>
 
   <div class="container">
     <div class="card">
-      <!-- ✅ Flash messages section -->
       {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
           <div id="flash-messages" style="margin-bottom:20px; text-align:center;">
             {% for category, message in messages %}
-              <div style="
-                background: rgba(255,255,255,0.15);
-                padding: 10px 15px;
-                margin-bottom: 10px;
-                border-radius: 10px;
-                color: #fff;
-                font-weight: 500;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-              ">
-                {{ message }}
-              </div>
+              {% if category in ['bus_added', 'route_added', 'bus_deleted', 'route_deleted'] %}
+                <div style="
+                  background: rgba(255,255,255,0.15);
+                  padding: 10px 15px;
+                  margin-bottom: 10px;
+                  border-radius: 10px;
+                  color: #fff;
+                  font-weight: 500;
+                  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+                ">
+                  {{ message }}
+                </div>
+              {% endif %}
             {% endfor %}
           </div>
         {% endif %}
       {% endwith %}
-      <!-- ✅ End of flash messages -->
 
-      <h2>Welcome, Admin</h2>
-      <a href="/add-bus" class="btn">➕ Add New Bus</a>
+      <h2>Welcome, {{ username }}</h2>
+
+      <!-- ✅ Action Buttons -->
+      <a href="/add-route" class="btn">🛣️ Add New Route</a>
+      <a href="/add-bus" class="btn">🚌 Add New Bus</a>
 
       {% if buses %}
       <table>
@@ -188,7 +189,7 @@
           <td>{{ bus.id }}</td>
           <td>{{ bus.number }}</td>
           <td>{{ bus.name }}</td>
-          <td>{{ bus.route }}</td>
+          <td>{{ bus.route_name if bus.route_name else 'N/A' }}</td>
           <td>{{ bus.total_seats }}</td>
           <td>
             <form action="/delete-bus/{{ bus.id }}" method="POST" style="display:inline;">
@@ -206,7 +207,6 @@
 
   <footer>© 2025 Smart Bus Tracker | Admin Panel</footer>
 
-  <!-- Optional: make notifications fade after few seconds -->
   <script>
     setTimeout(() => {
       const flash = document.getElementById("flash-messages");

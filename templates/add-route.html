@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Add Bus | Smart Bus Tracker</title>
+<title>Add Route | Smart Bus Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Raleway:wght@600;700&display=swap" rel="stylesheet">
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -83,7 +83,7 @@
         text-align: left;
     }
 
-    input, select, button {
+    input, textarea, button {
         width: 100%;
         padding: 12px;
         margin-top: 8px;
@@ -93,13 +93,13 @@
         font-family: 'Poppins', sans-serif;
     }
 
-    input, select {
+    input, textarea {
         background: rgba(255,255,255,0.15);
         color: #fff;
         font-size: 15px;
     }
 
-    option { color: #000; }
+    ::placeholder { color: rgba(255,255,255,0.7); }
 
     button {
         background: linear-gradient(135deg, #3b82f6, #1e40af);
@@ -142,26 +142,18 @@
 
 <div class="container">
   <div class="card">
-    <h2>🚌 Add New Bus</h2>
+    <h2>➕ Add New Route</h2>
     <form method="POST">
-      <label>Bus Number:</label>
-      <input type="text" name="bus_number" placeholder="e.g. KL-11-B-4321" required>
+      <label>Start Location:</label>
+      <input type="text" name="start_location" placeholder="e.g. Kozhikode" required>
 
-      <label>Bus Name:</label>
-      <input type="text" name="bus_name" placeholder="e.g. Swift Line" required>
+      <label>End Location:</label>
+      <input type="text" name="end_location" placeholder="e.g. Kochi" required>
 
-      <label>Total Seats:</label>
-      <input type="number" name="total_seats" placeholder="e.g. 45" required>
+      <label>Stops (comma separated):</label>
+      <textarea name="stops" rows="3" placeholder="e.g. Kottakkal, Thrissur, Aluva" required></textarea>
 
-      <label>Route:</label>
-      <select name="route_id" required>
-        <option value="">-- Select Route --</option>
-        {% for route in routes %}
-        <option value="{{ route.id }}">{{ route.start_location }} ➜ {{ route.end_location }}</option>
-        {% endfor %}
-      </select>
-
-      <button type="submit">Add Bus</button>
+      <button type="submit">Add Route</button>
     </form>
   </div>
 </div>
