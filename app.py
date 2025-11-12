@@ -210,8 +210,9 @@ def add_bus():
         total_seats = int(request.form["total_seats"])
         route_id = int(request.form["route_id"])
 
-        lat = round(random.uniform(8.0, 12.0), 4)
-        lng = round(random.uniform(75.0, 77.0), 4)
+        # Kerala's geographic boundaries: 8.3°N to 12.2°N, 74.8°E to 77.4°E
+        lat = round(random.uniform(8.3, 12.2), 4)
+        lng = round(random.uniform(74.9, 77.4), 4)
         arrival_time = (datetime.now() + timedelta(minutes=random.randint(5, 60))).strftime("%I:%M %p")
         status = random.choice(["On Time", "Delayed", "Arriving Soon"])
         passengers = random.randint(0, total_seats - 1)
