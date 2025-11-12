@@ -30,21 +30,28 @@
       background: white;
       border: 1px solid #d1d5db;
       border-radius: 8px;
-      max-height: 140px;
+      max-height: 200px;
       overflow-y: auto;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      z-index: 1000;
+      z-index: 1001;
       width: 100%;
       display: none;
+      top: 100%;
+      left: 0;
+      margin-top: 5px;
     }
     .suggestions-box div {
-      padding: 8px 12px;
+      padding: 12px 16px;
       cursor: pointer;
       font-size: 14px;
       color: #1a1a1a;
+      transition: background-color 0.15s;
     }
     .suggestions-box div:hover {
-      background-color: #ebf2ff;
+      background-color: #eff6ff;
+    }
+    .suggestions-box div:active {
+      background-color: #dbeafe;
     }
     /* Wrap inputs in relative containers to position suggestions */
     .input-wrapper {
@@ -204,11 +211,14 @@
 
 
 
+    let suggestionTimeout;
+
     function setupAutocomplete(inputId, suggestionsId) {
       const input = document.getElementById(inputId);
       const suggestionsBox = document.getElementById(suggestionsId);
 
       input.addEventListener('input', () => {
+        clearTimeout(suggestionTimeout);
         const value = input.value.trim().toLowerCase();
         suggestionsBox.innerHTML = '';
 
@@ -227,9 +237,11 @@
         filtered.forEach(loc => {
           const div = document.createElement('div');
           div.textContent = loc;
-          div.addEventListener('click', () => {
+          div.addEventListener('mousedown', (e) => {
+            e.preventDefault();
             input.value = loc;
             suggestionsBox.style.display = 'none';
+            input.focus();
           });
           suggestionsBox.appendChild(div);
         });
@@ -238,9 +250,16 @@
       });
 
       input.addEventListener('blur', () => {
-        setTimeout(() => {
+        suggestionTimeout = setTimeout(() => {
           suggestionsBox.style.display = 'none';
-        }, 150);
+        }, 200);
+      });
+
+      input.addEventListener('focus', () => {
+        clearTimeout(suggestionTimeout);
+        if (input.value.trim() !== '' && suggestionsBox.children.length > 0) {
+          suggestionsBox.style.display = 'block';
+        }
       });
     }
 
